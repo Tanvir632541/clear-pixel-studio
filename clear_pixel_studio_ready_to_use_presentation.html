@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Desktop-first design: Forced viewport scale for mobile devices -->
+    <meta name="viewport" content="width=1400, initial-scale=0.3">
+    <title>Clear Pixel Studio | Transform Products, Multiply Inquiries</title>
+    <style>
+        :root {
+            --primary-blue: #3b82f6;
+            --purple: #8b5cf6;
+            --pink: #f472b6;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --green: #10b981;
+            --dark-bg: #0a0e27;
+            --darker-bg: #060918;
+            --text-white: #ffffff;
+            --text-light-gray: #d1d5db;
+            --text-med-gray: #9ca3af;
+            --glass-bg: rgba(10, 14, 39, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-white);
+            min-width: 1400px;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Utility Classes */
+        .container {
+            width: 1300px;
+            margin: 0 auto;
+            padding: 80px 0;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-blue), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 22px;
+            color: var(--text-med-gray);
+            margin-bottom: 60px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 100px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 4px 30px rgba(139, 92, 246, 0.15);
+        }
+
+        .logo-area {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #fff, var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-tagline {
+            font-size: 14px;
+            color: var(--text-med-gray);
+            font-style: italic;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, var(--primary-blue), var(--purple));
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+        }
+
+        /* Hero Section */
+        #hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #1e1b4b 0%, #0a0e27 100%);
+            padding-top: 100px;
+        }
+
+        #hero h1 {
+            font-size: 68px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            max-width: 1000px;
+        }
+
+        #hero p {
+            font-size: 28px;
+            color: var(--text-light-gray);
+            margin-bottom: 50px;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px 50px;
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            display: block;
+            background: linear-gradient(135deg, var(--primary-blue), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 18px;
+            color: var(--text-light-gray);
+        }
+
+        .offer-banner {
+            background: linear-gradient(90deg, var(--orange), var(--red));
+            padding: 25px 60px;
+            border-radius: 15px;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            animation: pulse 2s infinite;
+            display: inline-block;
+        }
+
+        .offer-banner h3 { font-size: 24px; font-weight: 900; }
+        .offer-banner p { font-size: 20px !important; margin: 5px 0 0 0 !important; color: white !important; }
+
+        /* Problem Section */
+        #problems { background-color: var(--darker-bg); }
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .problem-card {
+            background: rgba(239, 68, 68, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            transition: 0.3s;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-10px);
+            background: rgba(239, 68, 68, 0.1);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.1);
+        }
+
+        .problem-card h4 {
+            color: var(--orange);
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        /* Impact Section */
+        #impact {
+            background-color: #f0f7ff;
+            color: #1e293b;
+            text-align: center;
+        }
+
+        #impact .section-title { color: #1e293b; }
+        .impact-grid {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .impact-item { flex: 1; }
+        .impact-num {
+            font-size: 64px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--green), #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
+
+        .impact-item p {
+            font-size: 20px;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 4px solid var(--green);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        /* Gallery Section */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .product-card {
+            background: #111827;
+            border: 2px solid var(--primary-blue);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+
+        .product-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+        }
+
+        .product-header {
+            padding: 15px;
+            text-align: center;
+            color: var(--pink);
+            font-weight: bold;
+            font-size: 20px;
+            background: rgba(244, 114, 182, 0.1);
+        }
+
+        .split-view {
+            display: flex;
+            height: 450px;
+        }
+
+        .image-half {
+            width: 50%;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .image-half img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .label-tag {
+            position: absolute;
+            bottom: 10px;
+            padding: 5px 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .before-tag { left: 10px; border-left: 3px solid var(--red); }
+        .after-tag { right: 10px; border-right: 3px solid var(--green); }
+
+        /* Solution Process */
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .solution-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            position: relative;
+        }
+
+        .step-num {
+            font-size: 60px;
+            font-weight: 900;
+            color: rgba(139, 92, 246, 0.2);
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        /* Case Study */
+        #case-study { background: var(--darker-bg); border-top: 1px solid #1e1b4b; }
+        .metrics-row {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .metric-box {
+            background: #111827;
+            padding: 30px;
+            border-radius: 15px;
+            width: 250px;
+            text-align: center;
+            border: 1px solid #1f2937;
+        }
+
+        .metric-val {
+            display: block;
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        /* Testimonial */
+        #testimonials { background: linear-gradient(135deg, #0f172a, #1e1b4b); }
+        .testimonial-card {
+            background: rgba(255,255,255,0.03);
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px;
+            border-radius: 30px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            text-align: center;
+        }
+
+        .quote-mark { font-size: 80px; color: var(--purple); line-height: 0; display: block; margin-bottom: 30px; }
+        .testimonial-text { font-size: 24px; font-style: italic; color: var(--text-light-gray); margin-bottom: 40px; }
+        
+        .author-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        /* How It Works */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary-blue), var(--purple));
+            top: 0; bottom: 0; left: 50%;
+            margin-left: -2px;
+        }
+
+        .step-container {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+        }
+
+        .left { left: 0; text-align: right; }
+        .right { left: 50%; text-align: left; }
+
+        .step-content {
+            background: #111827;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #1e2937;
+        }
+
+        /* Pricing */
+        .pricing-card {
+            background: #111827;
+            width: 600px;
+            margin: 0 auto;
+            border-radius: 30px;
+            border: 2px solid var(--orange);
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .pricing-badge { background: linear-gradient(90deg, var(--orange), var(--red)); padding: 10px; font-weight: 800; }
+        .pricing-features { padding: 40px; text-align: left; }
+        .pricing-features li { list-style: none; margin-bottom: 15px; font-size: 18px; }
+        .check { color: var(--green); margin-right: 10px; }
+
+        /* Final CTA */
+        #final-cta {
+            background: linear-gradient(135deg, var(--primary-blue), var(--purple), var(--pink));
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wa-btn {
+            background: #25d366;
+            color: white;
+            padding: 25px 60px;
+            border-radius: 100px;
+            font-size: 32px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
+            transition: 0.3s;
+        }
+
+        .wa-btn:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(37, 211, 102, 0.7);
+        }
+
+        footer {
+            background: var(--darker-bg);
+            padding: 60px 0;
+            text-align: center;
+            border-top: 1px solid var(--purple);
+            color: var(--text-med-gray);
+        }
+
+        .footer-logo { font-size: 24px; font-weight: 800; color: var(--purple); margin-bottom: 10px; }
+        .highlight { color: var(--purple); font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo-area">
+            <span class="logo">✨ CLEAR PIXEL STUDIO</span>
+            <span class="nav-tagline">Transform Products, Multiply Inquiries</span>
+        </div>
+        <a href="https://wa.me/917866048085?text=Yes! I'm interested in getting 3 FREE product images enhanced." class="nav-btn">Get Free Sample</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <h1 class="reveal">Transform Your Products Into <span class="gradient-text">Inquiry Magnets</span></h1>
+        <p class="reveal">Professional Product Photography Enhancement for B2B Sellers</p>
+        
+        <div class="stats-row reveal">
+            <div class="stat-card">
+                <span class="stat-number">250%+</span>
+                <span class="stat-label">Inquiry Increase</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">500+</span>
+                <span class="stat-label">Products Enhanced</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">Happy Clients</span>
+            </div>
+        </div>
+
+        <a href="https://wa.me/917866048085?text=Yes! I'm interested in getting 3 FREE product images enhanced." class="offer-banner reveal">
+            <h3>🎁 LIMITED TIME OFFER</h3>
+            <p>Get UP TO 3 Product Images Enhanced - Absolutely FREE!</p>
+        </a>
+    </section>
+
+    <!-- Problem Section -->
+    <section id="problems" class="container">
+        <h2 class="section-title">The Problem Every B2B Seller Faces</h2>
+        <p class="section-subtitle">Low-quality product photos are silently killing your sales</p>
+        
+        <div class="problem-grid">
+            <div class="problem-card reveal">
+                <h4>📸 Poor Quality</h4>
+                <p>Blurry, dark, or unclear photos make products look cheap and unprofessional.</p>
+            </div>
+            <div class="problem-card reveal">
+                <h4>🗑️ Cluttered Backgrounds</h4>
+                <p>Messy surroundings destroy buyer confidence and distract from the product.</p>
+            </div>
+            <div class="problem-card reveal">
+                <h4>💡 Bad Lighting</h4>
+                <p>Yellow tints and harsh shadows hide important details from potential buyers.</p>
+            </div>
+            <div class="problem-card reveal">
+                <h4>❌ No Context</h4>
+                <p>Products floating in space with no usage sense fail to engage the customer.</p>
+            </div>
+            <div class="problem-card reveal">
+                <h4>👎 Lost Trust</h4>
+                <p>Buyers associate poor photo quality with poor product quality instantly.</p>
+            </div>
+            <div class="problem-card reveal">
+                <h4>📉 Low Conversions</h4>
+                <p>Bad presentation means fewer inquiries and wasted advertising budget.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Stats -->
+    <section id="impact">
+        <div class="container">
+            <h2 class="section-title">The Real Cost of Bad Product Photos</h2>
+            <div class="impact-grid">
+                <div class="impact-item reveal">
+                    <span class="impact-num">73%</span>
+                    <p>judge quality by photos</p>
+                </div>
+                <div class="impact-item reveal">
+                    <span class="impact-num">5X</span>
+                    <p>more inquiries</p>
+                </div>
+                <div class="impact-item reveal">
+                    <span class="impact-num">67%</span>
+                    <p>demand high quality</p>
+                </div>
+                <div class="impact-item reveal">
+                    <span class="impact-num">90%</span>
+                    <p>more engagement</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="container">
+        <h2 class="section-title">See The Transformation</h2>
+        <p class="section-subtitle">Real product enhancements that turned ordinary listings into inquiry magnets</p>
+        
+        <div class="gallery-grid">
+            <!-- Product 1 -->
+            <div class="product-card reveal">
+                <div class="product-header">👗 Women's Fashion Apparel</div>
+                <div class="split-view">
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg9B8NFzK9LY4929hq5n1FVo8nLB-mNTF2EocQeLdAcvaj6N_xhNd5myIl1uac74r_nf3acAPV3c0hlS6I9t9m0ZZZPGFLEz7MPaBaEXswpMfomwduqyJ3DHcUsW7qtpLFb4lHkz33Wlq-0j9KeAdX0L1kdGbvwY67vtzwRcIXiYN2ZEoCZzKPm_8JoG0o/s1600/1000054428.jpg" alt="Before">
+                        <span class="label-tag before-tag">Before</span>
+                    </div>
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgTk93jHuxsOzxONMIgZdYdNRPsPjnWHlsH3RTxkzwgAm7Rk6xHnnTQ5IrOHNYUrmZ5EeLgTmMPwSDvpHuUXxm10yELdFrRdisGIYuinSE1rgiJBnWDKwk5FNDEfyLsRR9ZNdU1LKH9Bg5OF-OsKFoq_YsybcQA9ZJ3tpJ1Riv3lqgFrDIw0dfhEoYSQ1I/s1600/1000054431.jpg" alt="After">
+                        <span class="label-tag after-tag">After</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card reveal">
+                <div class="product-header">👔 Men's Formal Wear</div>
+                <div class="split-view">
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjiZNtB50SZp6D5YmkjGm4BlqhTEL4az7qpvHxXFRe6xBSgOzVjv7BgZnC2THInnKXbywQ8oPtOZ35BukD8sD882Hug7m_vhQK7_0gs-IO1b52MpseeaFEvTITtc0FBG5YMb4JmN_cJJxPNelXYVR70rYqRTj4XF3wPFwTb51X7r15C1pwp988OQIZEhp4/s1600/1000055774.jpg" alt="Before">
+                        <span class="label-tag before-tag">Before</span>
+                    </div>
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj4FCXkGXRfJg5gbH_ssP0fxz9HzBkhxbzouW8g-A_h4liTZr90x_1_YK8OQyLyWm-zd4vf3y3f_EqpR6tI_ECH6OPbPGq-4y-03gmjP-w5zl5z9LME_NiAfC-vGGqkL8_RBhK4XVv4B30osCaT2vZjhcEV42lw27UxRJ63Z-q5m1tdF795dEnlrq1FtYo/s1600/1000055806.jpg" alt="After">
+                        <span class="label-tag after-tag">After</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card reveal">
+                <div class="product-header">🍶 Plastic Bottle Manufacturing</div>
+                <div class="split-view">
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgfXeCufPn5vSieXjpJZoWk9Ix8UhNh_6A5v3fVMkSruO8wLR_noMUbJfTUix5pzh4Jz4PCHes6jOIPWUtaA8KgLilFxQWN1CRhScxnkJo5Uww8Bssc3IYckm6pfzAbZsBiRW_QcLma_qx_RlVw4VM6bF5As04PI8eGBeZKM7pr9Ebfam5IIwuWm82pcIk/s1600/1000054387.jpg" alt="Before">
+                        <span class="label-tag before-tag">Before</span>
+                    </div>
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgBEAvZqtlq7IarHAAkJAK2CW2wgkRnePMBrYTg6MDhDRTNI1YeR6km3NNU7cUaTdhAuyHtlUE1h8htOIHPHvIYNk0ds02cfvHYcFg_2r5dC90wROlt9xykoOLL28CQ9TUjwM71Z4dgZ_-1cV7MZ_ycOkMRi0taJG-iVNliHc3jdX8NCg262RjWF18-uPI/s1600/1000054389.jpg" alt="After">
+                        <span class="label-tag after-tag">After</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card reveal">
+                <div class="product-header">⚡ Electrical Components</div>
+                <div class="split-view">
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjlBH8UiFuzS3tSmK0WKCutf-3hMV0q2tMg1GjjLXJ-PlTSl0JDeOpiA7kdhiTIgbC-I9U-9hMo0d7ONjHE9DN_tIi2fd_P8YMXUtFjpg0k0ouo1kVkNx8XpkAM3okLdr92h0RAVQE9sYwYDxnYiIrQggaWXnBTGeoYUnTTajnxbpRGTtYutk2yWqjPeRw/s1600/1000055779.jpg" alt="Before">
+                        <span class="label-tag before-tag">Before</span>
+                    </div>
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhX0MWJTg70JGk5sqaukqO65ih2jmbGNX6DonDLD5_m1hSpVWVm1wg4ZNyApxCTLbSott_1ownRYJxcyik0WfWdHqBWtAN_O5IJdsKn1XMvihdL1KRJ6X2VCf3GcZxW9hj6gHyU92205GqWtAkyOH6_7KS6SQgYCqAxK-hC8JumYFB8CDdg947Gdv1sDjs/s1600/1000055805.jpg" alt="After">
+                        <span class="label-tag after-tag">After</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card reveal">
+                <div class="product-header">💎 Fashion Jewelry</div>
+                <div class="split-view">
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEirJklzTsQb-n0YLtG3E24odcTohOVK5BOVXAPw2ZKx1cskdD5DtXEcwjS0RW-fg3JN2HfY2OyeYnnALbrDEoowDApD7Q9T1NW-xbh2oZfXlShIhUTBZzQAg9xngKhJoo9gTY3fWs8CLe3two0Q1V_9Yt_5O1BqsxEQKuf-O5kmHMMBBJJnO-gNl8etCg8/s1600/1000055782.jpg" alt="Before">
+                        <span class="label-tag before-tag">Before</span>
+                    </div>
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgVagKwOweOLzTqXriwSppzwvN9NZozrYSa86SM4K3KB3FING_b44bBbA-4_hN1v6K3J4uupN71nhRbYq0_vzoz85Sce_njRaziZVLuf0c1QMxK4ZUz0Fe28aNSQQ9NVv42EpfwkMM3E1BopNvFVA79uoLjBBzkxZe62bhXyWVN-u9ghTM9l6XCpRPBWVY/s1600/1000055802.jpg" alt="After">
+                        <span class="label-tag after-tag">After</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card reveal">
+                <div class="product-header">🏠 Home Decor Items</div>
+                <div class="split-view">
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgj1upBAS9qrR_8V8oepbIILbrY-N00zbuB_5mpCI2NeC5sHfiyueM98UHIIOp3RwEa9FqpAtUdBTeLVGlk9UP0_rx06i17DW_WR1jmcvDPTtGI1oT_T57B1oyNt5Zi4Z4xb0af7cYstF_gre0qiryMqgcjJlbi5EYrobFL6JC7CRhiVqo-rcpWMt0INZ0/s1600/1000055786.jpg" alt="Before">
+                        <span class="label-tag before-tag">Before</span>
+                    </div>
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEglv_SPAs4YS4ioSE-uSYP62MtKBnDP7heeOJDZFV7gNHVCtJUDrARQOKjXqdkM0MZbMD20_dJ4skCylJI4jD3PZ2HrkRgqGGsqfpfDP0IPzq3w7BdlgLzf9k3oKq5KPSxC1JDSxpTuNKIaRlen3TlGfIF6Xc0gfix831TUvwC-r0smvnTJIVn6lcOx4bo/s1600/1000055804.jpg" alt="After">
+                        <span class="label-tag after-tag">After</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 7 -->
+            <div class="product-card reveal">
+                <div class="product-header">🔧 Industrial Tools & Equipment</div>
+                <div class="split-view">
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh9WWWFNbK0aPBA2RR5n0M9bbndVPuan3TkhuutDCgfN3WA8YZXLeDTg1YXMGM-u7JaFj4WzPH9aM_gHnAlGxkjAuiOxILm8MawQ3F4gUfK5NzQEMqAtJLjFZ2F-iAeXVhmtNKje7BKmNx8dV7KEOAUuJ6IihE-huHJgjkgpDnAVG8wuHNtcYsHgi_mkTc/s1600/1000055790.jpg" alt="Before">
+                        <span class="label-tag before-tag">Before</span>
+                    </div>
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjZ2DqbjyMhdGkgpciSl6VpWHjiraGBpgk2vSMaU0iUZA67r3AV6oGaU6gPVJGCdyZQYGntTGepsxrDjATdq1nwGyQpcE7lzgYtfJ8VDqqC6c7Uv1wqSnx9YQF8O4TV1_jrAV4rTdi4A47yV5RjlrilvIk8OwIx9_OtKH0pXSh1DIOwkJmbKhCBvc8MeQk/s1600/1000055801.jpg" alt="After">
+                        <span class="label-tag after-tag">After</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 8 -->
+            <div class="product-card reveal">
+                <div class="product-header">💄 Beauty & Cosmetic Products</div>
+                <div class="split-view">
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgyjgC1ureA-CBdLRSIaE6uZaFNJfTcqRjv2lW-iD9qeWRggYd5LIHcLXJ5NTBmxNw4ArPKPHcInLTNMQQt80pfYThk14UXcSZ6H_0aSR9D95Om3WYybPd4D8nZunZdvnwixrDje_sWCFU4iTC1VFa665l-yPKpWq80YMDaukHyESg_7BoXWoPbEqs55as/s1600/1000055793.jpg" alt="Before">
+                        <span class="label-tag before-tag">Before</span>
+                    </div>
+                    <div class="image-half">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhBxm_laBgv56nHXX-0JatQ1mvwZeueKsDYpJGKkHG0DtbZQfGOxa8RV3bOPBbZDUI76gpe9Q0AT8GMtHq_pVWV9ZnKPIyFw5iGMoCM4_PYqzVsLww_SYF6yMfq8fx-RFdyirwlPyQCO5FQ4oD9nDD49XP9bswSrHxFao1wOjaelFjQvJgcX4gM913PehQ/s1600/1000055794.png" alt="After">
+                        <span class="label-tag after-tag">After</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Process -->
+    <section id="process" class="container">
+        <h2 class="section-title">Our Complete Transformation Process</h2>
+        <p class="section-subtitle">We don't just edit photos - we transform your entire product presentation</p>
+        <div class="process-grid">
+            <div class="solution-card reveal">
+                <span class="step-num">01</span>
+                <h4>Background Removal</h4>
+                <p>Clean, distraction-free backgrounds that put 100% focus on your product.</p>
+            </div>
+            <div class="solution-card reveal">
+                <span class="step-num">02</span>
+                <h4>Professional Backdrops</h4>
+                <p>Choose from pure white, elegant gray, or custom lifestyle backgrounds.</p>
+            </div>
+            <div class="solution-card reveal">
+                <span class="step-num">03</span>
+                <h4>Color & Light</h4>
+                <p>Fixing exposure, enhancing colors, and making products look true-to-life.</p>
+            </div>
+            <div class="solution-card reveal">
+                <span class="step-num">04</span>
+                <h4>Clarity & Sharpness</h4>
+                <p>Bringing out hidden textures and details that build buyer trust.</p>
+            </div>
+            <div class="solution-card reveal">
+                <span class="step-num">05</span>
+                <h4>Lifestyle Context</h4>
+                <p>Digitally placing products in realistic environments for better engagement.</p>
+            </div>
+            <div class="solution-card reveal">
+                <span class="step-num">06</span>
+                <h4>Platform Optimization</h4>
+                <p>Perfect sizing for IndiaMART, TradeIndia, Amazon, and your own website.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Study -->
+    <section id="case-study" class="container">
+        <h2 class="section-title">Real Results: Mehra Plastics Pvt Ltd</h2>
+        <p class="section-subtitle">Delhi-based plastic bottle manufacturer saw dramatic improvements in just 3 weeks</p>
+        <div class="metrics-row reveal">
+            <div class="metric-box">
+                <span class="metric-val" style="color: var(--text-med-gray)">12</span>
+                <p>BEFORE inquiries/mo</p>
+            </div>
+            <div class="metric-box">
+                <span class="metric-val">42</span>
+                <p>AFTER inquiries/mo</p>
+            </div>
+            <div class="metric-box">
+                <span class="metric-val">+250%</span>
+                <p>GROWTH in 3 weeks</p>
+            </div>
+            <div class="metric-box">
+                <span class="metric-val">₹8L+</span>
+                <p>NEW orders generated</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="container">
+        <h2 class="section-title">What Our Clients Say</h2>
+        <div class="testimonial-card reveal">
+            <span class="quote-mark">"</span>
+            <p class="testimonial-text">
+                "Pehle humein lagta tha ki photos se koi fark nahi padta, quality important hai. Lekin Clear Pixel Studio ne hamare ordinary product photos ko itna professional bana diya ki buyers khud call karne lage. IndiaMART pe ranking bhi improve hui aur serious inquiries 3 guna badh gayi. Best investment for any B2B seller!"
+            </p>
+            <div class="author-box">
+                <div class="avatar">AM</div>
+                <div style="text-align: left;">
+                    <p style="color: var(--purple); font-weight: bold; font-size: 20px;">Amit Mehra</p>
+                    <p style="color: var(--text-med-gray);">Managing Director, Mehra Plastics Pvt Ltd, Delhi</p>
+                    <p>⭐⭐⭐⭐⭐</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="container">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Simple 4-step process to transform your product presentation</p>
+        <div class="timeline">
+            <div class="step-container left reveal">
+                <div class="step-content">
+                    <h3>Step 1: Send Your Photos</h3>
+                    <p>WhatsApp us your raw product images taken from your phone or camera.</p>
+                </div>
+            </div>
+            <div class="step-container right reveal">
+                <div class="step-content">
+                    <h3>Step 2: We Transform</h3>
+                    <p>Our expert team removes backgrounds and enhances quality to studio standards.</p>
+                </div>
+            </div>
+            <div class="step-container left reveal">
+                <div class="step-content">
+                    <h3>Step 3: Review & Approve</h3>
+                    <p>We send you before-after comparisons for your final approval.</p>
+                </div>
+            </div>
+            <div class="step-container right reveal">
+                <div class="step-content">
+                    <h3>Step 4: Update & Grow</h3>
+                    <p>Upload enhanced images and watch your inquiries multiply instantly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="container">
+        <h2 class="section-title">Affordable Packages for Every Seller</h2>
+        <div class="pricing-card reveal">
+            <div class="pricing-badge">LIMITED TIME OFFER</div>
+            <div style="padding: 40px;">
+                <h2 style="font-size: 36px; margin-bottom: 10px;">🎁 Try Before You Buy</h2>
+                <p style="font-size: 20px; color: var(--text-med-gray)">Get UP TO 3 product images enhanced completely FREE</p>
+            </div>
+            <ul class="pricing-features">
+                <li><span class="check">✓</span> Complete background removal</li>
+                <li><span class="check">✓</span> Professional enhancement</li>
+                <li><span class="check">✓</span> Clean or lifestyle backgrounds</li>
+                <li><span class="check">✓</span> Platform-optimized sizing</li>
+                <li><span class="check">✓</span> Delivered within 24-48 hours</li>
+                <li><span class="check">✓</span> No payment, no credit card needed</li>
+                <li><span class="check">✓</span> See the difference yourself first</li>
+            </ul>
+            <div style="background: rgba(255,255,255,0.05); padding: 30px;">
+                <p style="font-weight: bold; font-size: 22px; color: var(--orange);">After Free Trial:</p>
+                <p>Packages starting from ₹499 • Bulk discounts available</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section id="final-cta">
+        <div class="container" style="padding: 0;">
+            <h2 style="font-size: 54px; font-weight: 800; margin-bottom: 20px;">Ready to Transform Your Product Listings?</h2>
+            <p style="font-size: 24px;">Start with 3 FREE product images - see the difference yourself</p>
+            <a href="https://wa.me/917866048085?text=Yes! I'm interested in getting 3 FREE product images enhanced by Clear Pixel Studio. Please guide me on the next steps!" class="wa-btn">
+                <span>📱</span> WhatsApp: 7866048085
+            </a>
+            <p style="margin-top: 30px; font-size: 18px; opacity: 0.9;">No payment needed • No commitment • Just see the results</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="padding: 0;">
+            <div class="footer-logo">CLEAR PIXEL STUDIO</div>
+            <p>Professional Product Photography Enhancement for B2B Sellers</p>
+            <p style="margin: 20px 0;">
+                Owner: <span class="highlight">Md Tanvir Alam</span> | 
+                WhatsApp: <span class="highlight">7866048085</span>
+            </p>
+            <p style="font-size: 14px; opacity: 0.6; margin-top: 40px;">
+                © 2026 Clear Pixel Studio. Helping B2B Sellers Grow Through Better Product Presentation.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Reveal animation on scroll
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+        // Initial check
+        reveal();
+    </script>
+</body>
+</html>
